@@ -40,3 +40,22 @@ jobs:
           gclient runhooks
           cp ../../config/args.gn out/Release/args.gn || true
           gn gen out/Release
+
+      - name: Compile Chromium Targets (Ninja)
+        run: |
+          export PATH="$PWD/depot_tools:$PATH"
+          cd chromium/src
+          autoninja -C out/Release chrome
+
+      - name: Upload Custom Chromium Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: custom-chromium-linux-x64
+          path: |
+            chromium/src/out/Release/chrome
+            chromium/src/out/Release/*.so
+            chromium/src/out/Release/chrome_100_percent.pak
+            chromium/src/out/Release/chrome_200_percent.pak
+            chromium/src/out/Release/resources.pak
+            chromium/src/out/Release/icudtl.dat
+          retention-days: 7
