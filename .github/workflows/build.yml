@@ -26,6 +26,17 @@ jobs:
           git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
           echo "$PWD/depot_tools" >> $GITHUB_PATH
 
-      - name: Verify Setup
+      - name: Fetch Chromium Source (Lightweight)
         run: |
-          echo "Chromium build toolchain pipeline initialized successfully."
+          export PATH="$PWD/depot_tools:$PATH"
+          mkdir -p chromium
+          cd chromium
+          fetch --no-history --no-hooks chromium
+          
+      - name: Run Hooks & Prepare GN Flags
+        run: |
+          export PATH="$PWD/depot_tools:$PATH"
+          cd chromium/src
+          gclient runhooks
+          cp ../../config/args.gn out/Release/args.gn || true
+          gn gen out/Release
