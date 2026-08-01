@@ -1,0 +1,31 @@
+name: Build Custom Chromium Engine
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build_chromium:
+    name: Build Chromium (x64 Release)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository Code
+        uses: actions/checkout@v4
+
+      - name: Free Disk Space on Runner
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          echo "Disk space cleaned for build."
+
+      - name: Install Google Depot Tools
+        run: |
+          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+          echo "$PWD/depot_tools" >> $GITHUB_PATH
+
+      - name: Verify Setup
+        run: |
+          echo "Chromium build toolchain pipeline initialized successfully."

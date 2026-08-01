@@ -1,0 +1,5 @@
+is_debug = false
+target_cpu = "x64"
+is_official_build = true
+enable_nacl = false
+symbol_level = 0
